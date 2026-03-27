@@ -1,163 +1,152 @@
-\# 🎙️ Twilio-based AI Voicebot
+# 🎙️ Twilio-based AI Voicebot
 
 A real-time AI voicebot that can talk to users over a phone call using:
 
-\- 📞 Twilio Media Streams
+- 📞 Twilio Media Streams  
+- 🧠 OpenAI (Speech-to-Text + LLM + Text-to-Speech)  
+- ⚡ FastAPI + WebSockets  
 
-\- 🧠 OpenAI (Speech-to-Text + LLM + Text-to-Speech)
+---
 
-\- ⚡ FastAPI + WebSockets
+## 🚀 Features
 
-\---
+- ✅ Real-time phone call interaction  
+- 🎧 Speech-to-Text (STT)  
+- 🤖 Intelligent AI responses  
+- 🔊 Text-to-Speech (TTS) voice replies  
+- ⚡ Live audio streaming  
+- 🌍 Handles noisy/multi-language input (responds in English)  
 
-\## 🚀 Features
+---
 
-\- ✅ Real-time phone call interaction
+## 🧠 Architecture
 
-\- 🎧 Speech-to-Text (STT)
-
-\- 🤖 Intelligent AI responses
-
-\- 🔊 Text-to-Speech (TTS) voice replies
-
-\- ⚡ Live audio streaming
-
-\- 🌍 Handles noisy/multi-language input (responds in English)
-
-\---
-
-\## 🧠 Architecture
-
+```
 User Call (Twilio)
-
-↓
-
+        ↓
 📡 Media Stream (WebSocket)
-
-↓
-
+        ↓
 🎧 Audio Buffer (mulaw → wav using ffmpeg)
-
-↓
-
+        ↓
 🧠 Speech-to-Text (OpenAI)
-
-↓
-
+        ↓
 🤖 LLM Response
-
-↓
-
+        ↓
 🔊 Text-to-Speech
-
-↓
-
+        ↓
 📡 Send Audio Back
-
-↓
-
+        ↓
 📞 User hears AI
+```
 
-\---
+---
 
-\## 📂 Project Structure
+## 📂 Project Structure
 
+```
 voicebot/
-
-│── app.py # FastAPI entry point
-
-│── ws\_handler.py # WebSocket audio handler
-
-│── stt.py # Speech-to-text logic
-
-│── tts.py # Text-to-speech logic
-
-│── llm.py # AI response logic
-
+│── app.py              # FastAPI entry point
+│── ws_handler.py       # WebSocket audio handler
+│── stt.py              # Speech-to-text logic
+│── tts.py              # Text-to-speech logic
+│── llm.py              # AI response logic
 │── requirements.txt
-
 │── .gitignore
-
 │── README.md
+```
 
-\---
+---
 
-\## ⚙️ Setup
+## ⚙️ Setup
 
-\### 1. Clone repo
+### 1. Clone Repository
 
-\`\`\`bash
-
+```bash
 git clone https://github.com/shauryachawla15/Twilio-based-Ai-Voicebot.git
-
 cd Twilio-based-Ai-Voicebot
+```
 
-2\. Create virtual environment
+### 2. Create Virtual Environment
 
+```bash
 python -m venv venv
+venv\Scripts\activate   # Windows
+```
 
-venv\\Scripts\\activate
+### 3. Install Dependencies
 
-3\. Install dependencies
-
+```bash
 pip install -r requirements.txt
+```
 
-4\. Install FFmpeg (IMPORTANT)
+### 4. Install FFmpeg (IMPORTANT)
 
 Download FFmpeg and add it to system PATH.
 
 Verify installation:
 
+```bash
 ffmpeg -version
+```
 
-5\. Set environment variables
+### 5. Set Environment Variables
 
-Create a .env file:
+Create a `.env` file:
 
-OPENAI\_API\_KEY=your\_openai\_api\_key
+```env
+OPENAI_API_KEY=your_openai_api_key
+TWILIO_ACCOUNT_SID=your_sid
+TWILIO_AUTH_TOKEN=your_token
+```
 
-TWILIO\_ACCOUNT\_SID=your\_sid
+---
 
-TWILIO\_AUTH\_TOKEN=your\_token
+## ▶️ Run the Server
 
-▶️ Run the Server
-
+```bash
 uvicorn app:app --reload
+```
 
 Server runs at:
 
+```
 http://127.0.0.1:8000
+```
 
-📞 Twilio Setup
+---
 
-Go to Twilio Console
+## 📞 Twilio Setup
 
-Configure Voice Webhook
+1. Go to Twilio Console  
+2. Configure Voice Webhook  
+3. Enable Media Streams  
 
-Use Media Streams
+### Example TwiML
 
-Example TwiML:
+```xml
+<Response>
+    <Connect>
+        <Stream url="wss://your-domain/ws" />
+    </Connect>
+</Response>
+```
 
-🧪 How It Works
+---
 
-User calls Twilio number
+## 🧪 How It Works
 
-Audio is streamed in real-time
+1. User calls Twilio number  
+2. Audio is streamed in real-time  
+3. Audio → Text (STT)  
+4. AI generates response  
+5. Response → Audio (TTS)  
+6. Audio sent back to user  
 
-Audio → Text (STT)
+---
 
-AI generates response
+## ⚠️ Important Notes
 
-Response → Audio (TTS)
-
-Audio sent back to user
-
-⚠️ Important Notes
-
-FFmpeg must be installed and added to PATH
-
-Audio is buffered before processing
-
-Small chunks may reduce transcription accuracy
-
-AI responses are forced in English
+- FFmpeg must be installed and added to PATH  
+- Audio is buffered before processing  
+- Small chunks may reduce transcription accuracy  
+- AI responses are forced in English  
